@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.DetalleGrupoPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    xmlns:dto="clr-namespace:FinanzasApp.Core.DTOs.Grupo;assembly=Core"
+    x:DataType="vm:DetalleGrupoViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Cabecera -->
+        <Grid
+            Grid.Row="0"
+            BackgroundColor="{StaticResource Primary}"
+            ColumnDefinitions="Auto,*,Auto">
+            <Grid.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="16,48,16,16" />
+                    <On Platform="WinUI" Value="16,16,16,16" />
+                </OnPlatform>
+            </Grid.Padding>
+
+            <Button
+                Grid.Column="0"
+                Text="←" FontSize="20"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource White}"
+                Command="{Binding VolverCommand}" />
+
+            <Label
+                Grid.Column="1"
+                Text="{Binding Grupo.Nombre}"
+                FontSize="20" FontAttributes="Bold"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+
+            <Button
+                Grid.Column="2"
+                Text="➕👤"
+                FontSize="16"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource White}"
+                Command="{Binding InvitarUsuarioCommand}" />
+        </Grid>
+
+        <!-- Contenido -->
+        <RefreshView
+            Grid.Row="1"
+            Command="{Binding CargarResumenCommand}"
+            IsRefreshing="{Binding EstaCargando}">
+
+            <ScrollView>
+                <VerticalStackLayout Padding="16" Spacing="16">
+
+                    <!-- Resumen financiero del grupo -->
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="12">
+
+                            <Label
+                                Text="Resumen del mes"
+                                FontSize="16" FontAttributes="Bold"
+                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                <Border
+                                    Grid.Column="0"
+                                    BackgroundColor="{StaticResource IngresoLight}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 10"
+                                    Padding="12,8">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="Ingresos" Style="{StaticResource LabelSecundario}" />
+                                        <Label
+                                            Text="{Binding Resumen.TotalIngresosGrupo, StringFormat='{0:C2}'}"
+                                            Style="{StaticResource LabelIngreso}"
+                                            FontSize="16" />
+                                    </VerticalStackLayout>
+                                </Border>
+
+                                <Border
+                                    Grid.Column="1"
+                                    BackgroundColor="{StaticResource GastoLight}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 10"
+                                    Padding="12,8">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="Gastos" Style="{StaticResource LabelSecundario}" />
+                                        <Label
+                                            Text="{Binding Resumen.TotalGastosGrupo, StringFormat='{0:C2}'}"
+                                            Style="{StaticResource LabelGasto}"
+                                            FontSize="16" />
+                                    </VerticalStackLayout>
+                                </Border>
+                            </Grid>
+
+                            <Border
+                                BackgroundColor="{StaticResource BalanceLight}"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="12,8">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <Label Text="Balance del grupo" Style="{StaticResource LabelSecundario}" />
+                                        <Label
+                                            Text="{Binding Resumen.BalanceGrupo, StringFormat='{0:C2}'}"
+                                            FontSize="20" FontAttributes="Bold"
+                                            TextColor="{StaticResource Balance}" />
+                                    </VerticalStackLayout>
+                                    <Label
+                                        Grid.Column="1"
+                                        Text="👥"
+                                        FontSize="28"
+                                        VerticalOptions="Center" />
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Ranking de gastos -->
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="12">
+
+                            <Label
+                                Text="🏆 Ranking de gastos"
+                                FontSize="16" FontAttributes="Bold"
+                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+
+                            <CollectionView
+                                ItemsSource="{Binding Ranking}"
+                                SelectionMode="None">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="dto:MiembroGrupoDto">
+                                        <Grid
+                                            ColumnDefinitions="Auto,Auto,*,Auto"
+                                            ColumnSpacing="10"
+                                            Padding="0,6">
+
+                                            <!-- Posición -->
+                                            <Label
+                                                Grid.Column="0"
+                                                Text="{Binding Posicion, Converter={StaticResource PosicionRankingConverter}}"
+                                                FontSize="18"
+                                                VerticalOptions="Center"
+                                                MinimumWidthRequest="28" />
+
+                                            <!-- Avatar -->
+                                            <Border
+                                                Grid.Column="1"
+                                                WidthRequest="40" HeightRequest="40"
+                                                StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 20"
+                                                BackgroundColor="{StaticResource PrimaryLight}">
+                                                <Label
+                                                    Text="👤"
+                                                    FontSize="18"
+                                                    HorizontalOptions="Center"
+                                                    VerticalOptions="Center" />
+                                            </Border>
+
+                                            <!-- Nombre -->
+                                            <VerticalStackLayout
+                                                Grid.Column="2"
+                                                Spacing="2"
+                                                VerticalOptions="Center">
+                                                <Label
+                                                    Text="{Binding Nombre}"
+                                                    FontSize="14" FontAttributes="Bold"
+                                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                                <Label
+                                                    Text="Admin"
+                                                    FontSize="10"
+                                                    TextColor="{StaticResource Primary}"
+                                                    IsVisible="{Binding EsCreador}" />
+                                            </VerticalStackLayout>
+
+                                            <!-- Gasto -->
+                                            <Label
+                                                Grid.Column="3"
+                                                Text="{Binding TotalGastos, StringFormat='{0:C2}'}"
+                                                Style="{StaticResource LabelGasto}"
+                                                FontSize="14"
+                                                VerticalOptions="Center" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <BoxView>
+                        <BoxView.HeightRequest>
+                            <OnPlatform x:TypeArguments="x:Double">
+                                <On Platform="Android" Value="32" />
+                                <On Platform="WinUI" Value="16" />
+                            </OnPlatform>
+                        </BoxView.HeightRequest>
+                    </BoxView>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

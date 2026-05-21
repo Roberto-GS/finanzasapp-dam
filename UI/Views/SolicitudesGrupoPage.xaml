@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.SolicitudesGrupoPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    xmlns:dto="clr-namespace:FinanzasApp.Core.DTOs.Grupo;assembly=Core"
+    x:DataType="vm:SolicitudesGrupoViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <Grid
+            Grid.Row="0"
+            BackgroundColor="{StaticResource Primary}"
+            ColumnDefinitions="Auto,*">
+            <Grid.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="16,48,16,16" />
+                    <On Platform="WinUI" Value="16,16,16,16" />
+                </OnPlatform>
+            </Grid.Padding>
+
+            <Button
+                Grid.Column="0"
+                Text="←" FontSize="20"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource White}"
+                Command="{Binding VolverCommand}" />
+
+            <Label
+                Grid.Column="1"
+                Text="Solicitudes pendientes"
+                FontSize="20" FontAttributes="Bold"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+        </Grid>
+
+        <RefreshView
+            Grid.Row="1"
+            Command="{Binding CargarCommand}"
+            IsRefreshing="{Binding EstaCargando}">
+
+            <CollectionView
+                ItemsSource="{Binding Solicitudes}"
+                SelectionMode="None"
+                Margin="16,8">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:SolicitudGrupoDto">
+                        <Border Style="{StaticResource Card}" Margin="0,4">
+                            <VerticalStackLayout Spacing="12">
+
+                                <VerticalStackLayout Spacing="4">
+                                    <Label
+                                        Text="{Binding GrupoNombre}"
+                                        FontSize="16" FontAttributes="Bold"
+                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                    <Label
+                                        Text="{Binding SolicitanteNombre, StringFormat='Invitado por {0}'}"
+                                        Style="{StaticResource LabelSecundario}" />
+                                    <Label
+                                        Text="{Binding FechaSolicitud, StringFormat='{0:dd MMM yyyy}'}"
+                                        Style="{StaticResource LabelSecundario}"
+                                        FontSize="11" />
+                                </VerticalStackLayout>
+
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                                    <Button
+                                        Grid.Column="0"
+                                        Text="✅ Aceptar"
+                                        Style="{StaticResource PrimaryButton}"
+                                        HeightRequest="44"
+                                        Margin="0"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SolicitudesGrupoViewModel}}, Path=AceptarCommand}"
+                                        CommandParameter="{Binding .}" />
+                                    <Button
+                                        Grid.Column="1"
+                                        Text="❌ Rechazar"
+                                        Style="{StaticResource SecondaryButton}"
+                                        TextColor="{StaticResource Gasto}"
+                                        BorderColor="{StaticResource Gasto}"
+                                        HeightRequest="44"
+                                        Margin="0"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SolicitudesGrupoViewModel}}, Path=RechazarCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" Padding="0,48">
+                        <Label Text="🔔" FontSize="48" HorizontalOptions="Center" />
+                        <Label
+                            Text="No tienes solicitudes pendientes"
+                            Style="{StaticResource LabelSecundario}"
+                            HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+            </CollectionView>
+        </RefreshView>
+
+    </Grid>
+</ContentPage>

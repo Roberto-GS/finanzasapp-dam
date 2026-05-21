@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.AjustesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    x:DataType="vm:AjustesViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Cabecera -->
+        <VerticalStackLayout
+            Grid.Row="0"
+            BackgroundColor="{StaticResource Primary}">
+            <VerticalStackLayout.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="16,48,16,20" />
+                    <On Platform="WinUI" Value="16,16,16,20" />
+                </OnPlatform>
+            </VerticalStackLayout.Padding>
+
+            <Grid ColumnDefinitions="Auto,*">
+                <Button
+                    Grid.Column="0"
+                    Text="←"
+                    FontSize="20"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource White}"
+                    Command="{Binding VolverCommand}" />
+
+                <Label
+                    Grid.Column="1"
+                    Text="Ajustes"
+                    FontSize="25" 
+                    FontAttributes="Bold"
+                    TextColor="{StaticResource White}"
+                    VerticalOptions="Center" />
+            </Grid>
+        </VerticalStackLayout>
+
+        <!-- Contenido -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16" Spacing="12">
+
+                <!-- Información del usuario -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+
+                        <HorizontalStackLayout Spacing="16">
+                            <!-- Avatar -->
+                            <Border
+                                WidthRequest="64" 
+                                HeightRequest="64"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 32"
+                                BackgroundColor="{StaticResource PrimaryLight}">
+                                <Label
+                                    Text="👤"
+                                    FontSize="30"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center" />
+                            </Border>
+
+                            <VerticalStackLayout Spacing="4" VerticalOptions="Center">
+                                <Label
+                                    Text="{Binding NombreUsuario}"
+                                    FontSize="20" FontAttributes="Bold"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                <Label
+                                    Text="{Binding EmailUsuario}"
+                                    Style="{StaticResource LabelSecundario}" />
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Cambio exitoso -->
+                <Border
+                    IsVisible="{Binding CambioExitoso}"
+                    BackgroundColor="{StaticResource IngresoLight}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="12,10">
+                    <HorizontalStackLayout Spacing="10">
+                        <Label Text="✅" FontSize="16" />
+                        <Label
+                            Text="La Contraseña ha sido cambiada correctamente"
+                            TextColor="{StaticResource Ingreso}"
+                            FontSize="15" FontAttributes="Bold"
+                            VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!-- Sección seguridad -->
+                <Label
+                    Text="SEGURIDAD"
+                    Style="{StaticResource LabelSecundario}"
+                    FontSize="12" FontAttributes="Bold"
+                    Margin="4,8,0,0" />
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="0">
+
+                        <!-- Cambiar contraseña -->
+                        <Grid
+                            ColumnDefinitions="Auto,*,Auto"
+                            ColumnSpacing="12"
+                            Padding="0,4">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding ToggleCambiarPasswordCommand}" />
+                            </Grid.GestureRecognizers>
+
+                            <Label
+                                Grid.Column="0"
+                                Text="🔒"
+                                FontSize="20"
+                                VerticalOptions="Center" />
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                <Label
+                                    Text="Cambiar la contraseña"
+                                    FontSize="15" FontAttributes="Bold"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                <Label
+                                    Text="Actualiza tu contraseña de acceso"
+                                    Style="{StaticResource LabelSecundario}" />
+                            </VerticalStackLayout>
+
+                            <Label
+                                Grid.Column="2"
+                                Text="{Binding MostrarCambiarPassword, Converter={StaticResource ChevronConverter}}"
+                                FontSize="18"
+                                TextColor="{StaticResource Gray400}"
+                                VerticalOptions="Center" />
+                        </Grid>
+
+                        <!-- Formulario cambiar contraseña -->
+                        <VerticalStackLayout
+                            IsVisible="{Binding MostrarCambiarPassword}"
+                            Spacing="0"
+                            Margin="0,12,0,0">
+
+                            <BoxView
+                                HeightRequest="1"
+                                BackgroundColor="{StaticResource Gray200}"
+                                Margin="0,0,0,12" />
+
+                            <!-- Error -->
+                            <Border
+                                IsVisible="{Binding HayError}"
+                                BackgroundColor="{StaticResource GastoLight}"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12,8"
+                                Margin="0,0,0,12">
+                                <Label
+                                    Text="{Binding MensajeError}"
+                                    TextColor="{StaticResource Gasto}"
+                                    FontSize="13" />
+                            </Border>
+
+                            <Label
+                                Text="Contraseña actual"
+                                Style="{StaticResource LabelSecundario}"
+                                Margin="0,0,0,4" />
+                            <Border
+                                StrokeThickness="1.5"
+                                Stroke="{StaticResource Gray200}"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="12,0"
+                                Margin="0,0,0,12">
+                                <Entry
+                                    Style="{StaticResource FormEntry}"
+                                    Placeholder="Tu contraseña actual"
+                                    Text="{Binding PasswordActual}"
+                                    IsPassword="True" />
+                            </Border>
+
+                            <Label
+                                Text="Nueva contraseña"
+                                Style="{StaticResource LabelSecundario}"
+                                Margin="0,0,0,4" />
+                            <Border
+                                StrokeThickness="1.5"
+                                Stroke="{StaticResource Gray200}"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="12,0"
+                                Margin="0,0,0,12">
+                                <Entry
+                                    Style="{StaticResource FormEntry}"
+                                    Placeholder="Mínimo 8 caracteres"
+                                    Text="{Binding PasswordNueva}"
+                                    IsPassword="True" />
+                            </Border>
+
+                            <Label
+                                Text="Confirmar la nueva contraseña"
+                                Style="{StaticResource LabelSecundario}"
+                                Margin="0,0,0,4" />
+                            <Border
+                                StrokeThickness="1.5"
+                                Stroke="{StaticResource Gray200}"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="12,0"
+                                Margin="0,0,0,16">
+                                <Entry
+                                    Style="{StaticResource FormEntry}"
+                                    Placeholder="Repite la nueva contraseña"
+                                    Text="{Binding ConfirmarPasswordNueva}"
+                                    IsPassword="True" />
+                            </Border>
+
+                            <Button
+                                Text="Guardar la nueva contraseña"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding CambiarPasswordCommand}"
+                                IsEnabled="{Binding NoEstaCargando}" />
+
+                            <ActivityIndicator
+                                IsRunning="{Binding EstaCargando}"
+                                IsVisible="{Binding EstaCargando}"
+                                Color="{StaticResource Primary}"
+                                HorizontalOptions="Center"
+                                Margin="0,8" />
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Sección cuenta -->
+                <Label
+                    Text="CUENTA"
+                    Style="{StaticResource LabelSecundario}"
+                    FontSize="12" FontAttributes="Bold"
+                    Margin="4,8,0,0" />
+
+                <Border Style="{StaticResource Card}">
+                    <Grid
+                        ColumnDefinitions="Auto,*,Auto"
+                        ColumnSpacing="12"
+                        Padding="0,4">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding CerrarSesionCommand}" />
+                        </Grid.GestureRecognizers>
+
+                        <Label
+                            Grid.Column="0"
+                            Text="🚪"
+                            FontSize="22"
+                            VerticalOptions="Center" />
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label
+                                Text="Cerrar sesión"
+                                FontSize="15" FontAttributes="Bold"
+                                TextColor="{StaticResource Gasto}" />
+                            <Label
+                                Text="Salir de tu cuenta actual"
+                                Style="{StaticResource LabelSecundario}" />
+                        </VerticalStackLayout>
+
+                        <Label
+                            Grid.Column="2"
+                            Text="›"
+                            FontSize="22"
+                            TextColor="{StaticResource Gasto}"
+                            VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <BoxView>
+                    <BoxView.HeightRequest>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android" Value="80" />
+                            <On Platform="WinUI" Value="24" />
+                        </OnPlatform>
+                    </BoxView.HeightRequest>
+                </BoxView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

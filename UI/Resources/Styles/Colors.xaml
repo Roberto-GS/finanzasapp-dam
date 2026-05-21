@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:FinanzasApp.UI.Converters">
+
+    <!-- Colores fijos -->
+    <Color x:Key="Primary">#4F46E5</Color>
+    <Color x:Key="PrimaryDark">#3730A3</Color>
+    <Color x:Key="PrimaryLight">#EEF2FF</Color>
+    <Color x:Key="Secondary">#64748B</Color>
+    <Color x:Key="Ingreso">#16A34A</Color>
+    <Color x:Key="IngresoLight">#DCFCE7</Color>
+    <Color x:Key="Gasto">#DC2626</Color>
+    <Color x:Key="GastoLight">#FEE2E2</Color>
+    <Color x:Key="Balance">#22C55E</Color>
+    <Color x:Key="BalanceLight">#F0FDF4</Color>
+    <Color x:Key="Advertencia">#D97706</Color>
+    <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="Black">#000000</Color>
+    <Color x:Key="Gray50">#F9FAFB</Color>
+    <Color x:Key="Gray100">#F3F4F6</Color>
+    <Color x:Key="Gray200">#E5E7EB</Color>
+    <Color x:Key="Gray400">#9CA3AF</Color>
+    <Color x:Key="Gray600">#4B5563</Color>
+    <Color x:Key="Gray800">#1F2937</Color>
+    <Color x:Key="Gray900">#111111</Color>
+    <Color x:Key="Gray950">#0D1117</Color>
+
+    <!-- Modo Claro -->
+    <Color x:Key="PageBackgroundLight">#FFFFFF</Color>
+    <Color x:Key="CardBackgroundLight">#FFFFFF</Color>
+    <Color x:Key="TextPrimaryLight">#111111</Color>
+    <Color x:Key="TextSecondaryLight">#6B7280</Color>
+    <Color x:Key="InputBackgroundLight">#F3F4F6</Color>
+
+    <!-- Modo Oscuro -->
+    <Color x:Key="PageBackgroundDark">#111111</Color>
+    <Color x:Key="CardBackgroundDark">#1F2937</Color>
+    <Color x:Key="TextPrimaryDark">#F9FAFB</Color>
+    <Color x:Key="TextSecondaryDark">#9CA3AF</Color>
+    <Color x:Key="InputBackgroundDark">#1F2937</Color>
+
+    <!-- Converters -->
+    <converters:ExcedidoColorConverter x:Key="ExcedidoColorConverter"/>
+    <converters:TipoMovimientoToColorConverter x:Key="TipoToColorConverter"/>
+    <converters:TipoMovimientoToTextColorConverter x:Key="TipoToTextColorConverter"/>
+    <converters:TipoMovimientoToEmojiConverter x:Key="TipoToEmojiConverter"/>
+    <converters:TipoSelectorColorConverter x:Key="TipoSelectorColorConverter"/>
+    <converters:BoolToColorConverter x:Key="GastosActivoColorConverter" TrueColor="#DC2626" FalseColor="Transparent"/>
+    <converters:BoolToColorConverter x:Key="IngresosActivoColorConverter" TrueColor="#16A34A" FalseColor="Transparent"/>
+    <converters:BoolToColorConverter x:Key="EsGastoActivoConverter" TrueColor="#DC2626" FalseColor="Transparent"/>
+    <converters:BoolToColorConverter x:Key="EsIngresoActivoConverter" TrueColor="#16A34A" FalseColor="Transparent"/>
+    <converters:BoolToEmojiConverter x:Key="BoolToEmojiConverter"/>
+    <converters:BoolToStringConverter x:Key="ChevronConverter" TrueValue="∧" FalseValue="›"/>
+    <converters:NotNullConverter x:Key="NotNullConverter"/>
+    <converters:NotificacionColorConverter x:Key="NotificacionColorConverter"/>
+    <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+    <converters:PeriodoObjetivoToStringConverter x:Key="PeriodoToStringConverter"/>
+    <converters:PosicionRankingConverter x:Key="PosicionRankingConverter"/>
+</ResourceDictionary>

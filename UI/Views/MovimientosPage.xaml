@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.MovimientosPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    xmlns:dto="clr-namespace:FinanzasApp.Core.DTOs.Movimiento;assembly=Core"
+    x:DataType="vm:MovimientosViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+        <!-- Cabecera -->
+        <VerticalStackLayout
+            Grid.Row="0"
+            BackgroundColor="{StaticResource Primary}">
+
+            <VerticalStackLayout.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="24,48,24,16" />
+                    <On Platform="WinUI" Value="24,16,24,16" />
+                </OnPlatform>
+            </VerticalStackLayout.Padding>
+
+            <Label
+                Text="Movimientos"
+                FontSize="24"
+                FontAttributes="Bold"
+                TextColor="{StaticResource White}" />
+
+            <Button
+                Text="🔍"
+                FontSize="20"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource White}"
+                Command="{Binding IrABuscarCommand}"
+                HorizontalOptions="End" />
+
+            <!-- Selector de mes -->
+            <HorizontalStackLayout Spacing="12" Margin="0,12,0,0" HorizontalOptions="Center">
+                <Button
+                    Text="‹" FontSize="22"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource White}"
+                    Command="{Binding MesAnteriorCommand}" />
+                <Label
+                    Text="{Binding MesAnioTexto}"
+                    TextColor="{StaticResource White}"
+                    FontSize="15" FontAttributes="Bold"
+                    VerticalOptions="Center"/>
+                <Button
+                    Text="›" FontSize="22"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource White}"
+                    Command="{Binding MesSiguienteCommand}" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <!-- Buscador -->
+        <Border
+            Grid.Row="1"
+            Margin="16,12"
+            StrokeThickness="1.5"
+            Stroke="{StaticResource Gray200}"
+            StrokeShape="RoundRectangle 12"
+            Padding="12,0"
+            BackgroundColor="{AppThemeBinding Light={StaticResource CardBackgroundLight}, Dark={StaticResource CardBackgroundDark}}">
+            <Grid ColumnDefinitions="Auto,*">
+                <Label Grid.Column="0" Text="🔍" FontSize="16" VerticalOptions="Center" Margin="0,0,8,0" />
+                <Entry
+                    Grid.Column="1"
+                    Style="{StaticResource FormEntry}"
+                    Placeholder="Buscar movimiento..."
+                    Text="{Binding TextoBusqueda}"
+                    ClearButtonVisibility="WhileEditing" />
+            </Grid>
+        </Border>
+
+        <!-- Lista -->
+        <RefreshView
+            Grid.Row="2"
+            Command="{Binding CargarMovimientosCommand}"
+            IsRefreshing="{Binding EstaCargando}">
+
+            <CollectionView
+                ItemsSource="{Binding MovimientosFiltrados}"
+                SelectionMode="None"
+                Margin="16,0">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:MovimientoDto">
+                        <Border Style="{StaticResource Card}" Margin="0,4">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MovimientosViewModel}}, Path=VerDetalleCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+
+                                <Border
+                                    Grid.Column="0"
+                                    WidthRequest="44" HeightRequest="44"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 22"
+                                    BackgroundColor="{Binding Tipo, Converter={StaticResource TipoToColorConverter}}">
+                                    <Label
+                                        Text="{Binding Tipo, Converter={StaticResource TipoToEmojiConverter}}"
+                                        FontSize="20"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center" />
+                                </Border>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                    <Label
+                                        Text="{Binding Nombre}"
+                                        FontSize="15" FontAttributes="Bold"
+                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                    <Label
+                                        Text="{Binding CategoriaNombre, TargetNullValue='Sin categoría'}"
+                                        Style="{StaticResource LabelSecundario}" />
+                                    <Label
+                                        Text="{Binding Fecha, StringFormat='{0:dd MMM yyyy}'}"
+                                        Style="{StaticResource LabelSecundario}"
+                                        FontSize="11" />
+                                </VerticalStackLayout>
+
+                                <Label
+                                    Grid.Column="2"
+                                    Text="{Binding Cantidad, StringFormat='{0:C2}'}"
+                                    VerticalOptions="Center"
+                                    FontAttributes="Bold" FontSize="15"
+                                    TextColor="{Binding Tipo, Converter={StaticResource TipoToTextColorConverter}}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" Padding="0,48">
+                        <Label Text="📭" FontSize="48" HorizontalOptions="Center" />
+                        <Label
+                            Text="No hay movimientos"
+                            Style="{StaticResource LabelSecundario}"
+                            HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Botón Flotante -->
+        <Button
+            Grid.Row="2"
+            Text="+"
+            Style="{StaticResource FabButton}"
+            Command="{Binding CrearMovimientoCommand}"
+            HorizontalOptions="End"
+            VerticalOptions="End">
+            <Button.Margin>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="0,0,16,80" />
+                    <On Platform="WinUI" Value="0,0,16,16" />
+                </OnPlatform>
+            </Button.Margin>
+        </Button>
+
+    </Grid>
+</ContentPage>

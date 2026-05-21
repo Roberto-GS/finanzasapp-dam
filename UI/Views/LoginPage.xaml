@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    x:DataType="vm:LoginViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <Grid RowDefinitions="*,Auto,*" Padding="0">
+
+            <!-- Fondo superior decorativo -->
+            <BoxView
+                Grid.Row="0"
+                BackgroundColor="{StaticResource Primary}"
+                HeightRequest="280"
+                VerticalOptions="Fill" />
+
+            <!-- Tarjeta central -->
+            <Border
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Style="{StaticResource Card}"
+                VerticalOptions="Center"
+                Margin="24,100,24,24">
+
+                <VerticalStackLayout Spacing="0" Padding="8">
+
+                    <!-- Logo / Título -->
+                    <Label
+                        Text="💰"
+                        FontSize="52"
+                        HorizontalOptions="Center"
+                        Margin="0,0,0,8"/>
+
+                    <Label
+                        Text="FinanzasApp"
+                        FontSize="28"
+                        FontAttributes="Bold"
+                        TextColor="{StaticResource Primary}"
+                        HorizontalOptions="Center" />
+
+                    <Label
+                        Text="Gestiona tus finanzas personales"
+                        Style="{StaticResource LabelSecundario}"
+                        HorizontalOptions="Center"
+                        Margin="0,4,0,24" />
+
+                    <!-- Error -->
+                    <Border
+                        IsVisible="{Binding HayError}"
+                        BackgroundColor="{StaticResource GastoLight}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="12,8"
+                        Margin="0,0,0,12">
+                        <Label
+                            Text="{Binding MensajeError}"
+                            TextColor="{StaticResource Gasto}"
+                            FontSize="13" />
+                    </Border>
+
+                    <!-- Email -->
+                    <Label
+                        Text="Correo electrónico"
+                        Style="{StaticResource LabelSecundario}"
+                        Margin="0,0,0,4"/>
+                    <Border
+                        StrokeThickness="1.5"
+                        Stroke="{StaticResource Gray200}"
+                        StrokeShape="RoundRectangle 10"
+                        Padding="12,0">
+                        <Entry
+                            Style="{StaticResource FormEntry}"
+                            Placeholder="tu@email.com"
+                            Text="{Binding Email}"
+                            Keyboard="Email"
+                            ReturnType="Next" />
+                    </Border>
+
+                    <!-- Password -->
+                    <Label
+                        Text="Contraseña"
+                        Style="{StaticResource LabelSecundario}"
+                        Margin="0,12,0,4"/>
+                    <Border
+                        StrokeThickness="1.5"
+                        Stroke="{StaticResource Gray200}"
+                        StrokeShape="RoundRectangle 10"
+                        Padding="12,0">
+                        <Entry
+                            Style="{StaticResource FormEntry}"
+                            Placeholder="••••••••"
+                            Text="{Binding Password}"
+                            IsPassword="True"
+                            ReturnType="Done"
+                            ReturnCommand="{Binding LoginCommand}" />
+                    </Border>
+
+                    <!-- Recuperar contraseña -->
+                    <Label
+                        Text="¿Olvidaste tu contraseña?"
+                        TextColor="{StaticResource Primary}"
+                        FontSize="13"
+                        HorizontalOptions="End"
+                        Margin="0,8,0,16">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding RecuperarPasswordCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <!-- Botón Login -->
+                    <Button
+                        Text="Iniciar sesión"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding LoginCommand}"
+                        IsEnabled="{Binding NoEstaCargando}" />
+
+                    <!-- Indicador de carga -->
+                    <ActivityIndicator
+                        IsRunning="{Binding EstaCargando}"
+                        IsVisible="{Binding EstaCargando}"
+                        Color="{StaticResource Primary}"
+                        HorizontalOptions="Center"
+                        Margin="0,8" />
+
+                    <!-- Separador -->
+                    <Grid ColumnDefinitions="*,Auto,*" Margin="0,16">
+                        <BoxView Grid.Column="0" HeightRequest="1"
+                                 BackgroundColor="{StaticResource Gray200}"
+                                 VerticalOptions="Center"/>
+                        <Label Grid.Column="1" Text="o" Margin="12,0"
+                               Style="{StaticResource LabelSecundario}"/>
+                        <BoxView Grid.Column="2" HeightRequest="1"
+                                 BackgroundColor="{StaticResource Gray200}"
+                                 VerticalOptions="Center"/>
+                    </Grid>
+
+                    <!-- Registro -->
+                    <Button
+                        Text="Crear una cuenta nueva"
+                        Style="{StaticResource SecondaryButton}"
+                        Command="{Binding IrARegistroCommand}" />
+
+                    <!-- Espaciado inferior adaptativo -->
+                    <BoxView HeightRequest="0">
+                        <BoxView.HeightRequest>
+                            <OnPlatform x:TypeArguments="x:Double">
+                                <On Platform="Android" Value="16" />
+                                <On Platform="WinUI" Value="8" />
+                            </OnPlatform>
+                        </BoxView.HeightRequest>
+                    </BoxView>
+
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </ScrollView>
+
+</ContentPage>

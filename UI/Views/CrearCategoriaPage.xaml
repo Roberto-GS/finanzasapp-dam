@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.CrearCategoriaPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    x:DataType="vm:CrearCategoriaViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Cabecera -->
+        <Grid
+            Grid.Row="0"
+            BackgroundColor="{StaticResource Primary}"
+            ColumnDefinitions="Auto,*">
+            <Grid.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="16,48,16,16" />
+                    <On Platform="WinUI" Value="16,16,16,16" />
+                </OnPlatform>
+            </Grid.Padding>
+
+            <Button
+                Grid.Column="0"
+                Text="←" FontSize="20"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource White}"
+                Command="{Binding CancelarCommand}" />
+
+            <Label
+                Grid.Column="1"
+                Text="Nueva Categoría"
+                FontSize="20" 
+                FontAttributes="Bold"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+        </Grid>
+
+        <!-- Formulario -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24" Spacing="0">
+
+                <!-- Error -->
+                <Border
+                    IsVisible="{Binding HayError}"
+                    BackgroundColor="{StaticResource GastoLight}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="12,8"
+                    Margin="0,0,0,16">
+                    <Label Text="{Binding MensajeError}" TextColor="{StaticResource Gasto}" FontSize="13" />
+                </Border>
+
+                <!-- Preview color -->
+                <Border
+                    WidthRequest="72" HeightRequest="72"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 36"
+                    HorizontalOptions="Center"
+                    BackgroundColor="{Binding Color}"
+                    Margin="0,0,0,24">
+                    <Label
+                        Text="🏷"
+                        FontSize="32"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+                </Border>
+
+                <!-- Nombre -->
+                <Label Text="Nombre" Style="{StaticResource LabelSecundario}" Margin="0,0,0,4"/>
+                <Border StrokeThickness="1.5" Stroke="{StaticResource Gray200}"
+                        StrokeShape="RoundRectangle 10" Padding="12,0" Margin="0,0,0,24">
+                    <Entry
+                        Style="{StaticResource FormEntry}"
+                        Placeholder="Introduzca el Nombre de la nueva Categoría"
+                        Text="{Binding Nombre}" />
+                </Border>
+
+                <!-- Selector de color -->
+                <Label Text="Color" Style="{StaticResource LabelSecundario}" Margin="0,0,0,12"/>
+                <FlexLayout
+                    Wrap="Wrap"
+                    JustifyContent="Start"
+                    AlignItems="Center"
+                    Margin="0,0,0,24">
+                    <BindableLayout.ItemsSource>
+                        <Binding Path="ColoresDisponibles" />
+                    </BindableLayout.ItemsSource>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Border
+                                WidthRequest="44" HeightRequest="44"
+                                StrokeThickness="0"
+                                StrokeShape="RoundRectangle 22"
+                                BackgroundColor="{Binding .}"
+                                Margin="4">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CrearCategoriaViewModel}}, Path=SeleccionarColorCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+
+                <!-- Botón Guardar -->
+                <Button
+                    Text="Crear Categoría"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding GuardarCommand}"
+                    IsEnabled="{Binding NoEstaCargando}" />
+
+                <ActivityIndicator
+                    IsRunning="{Binding EstaCargando}"
+                    IsVisible="{Binding EstaCargando}"
+                    Color="{StaticResource Primary}"
+                    HorizontalOptions="Center"
+                    Margin="0,8" />
+
+                <BoxView>
+                    <BoxView.HeightRequest>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android" Value="32" />
+                            <On Platform="WinUI" Value="16" />
+                        </OnPlatform>
+                    </BoxView.HeightRequest>
+                </BoxView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

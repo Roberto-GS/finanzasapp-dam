@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.DetalleCategoriaPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    xmlns:dto="clr-namespace:FinanzasApp.Core.DTOs.Movimiento;assembly=Core"
+    x:DataType="vm:DetalleCategoriaViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Cabecera -->
+        <Grid
+            Grid.Row="0"
+            BackgroundColor="{StaticResource Primary}"
+            ColumnDefinitions="Auto,*">
+            <Grid.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="16,48,16,16" />
+                    <On Platform="WinUI" Value="16,16,16,16" />
+                </OnPlatform>
+            </Grid.Padding>
+
+            <Button
+                Grid.Column="0"
+                Text="←" FontSize="20"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource White}"
+                Command="{Binding VolverCommand}" />
+
+            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                <Label
+                    Text="{Binding Categoria.Nombre}"
+                    FontSize="20" FontAttributes="Bold"
+                    TextColor="{StaticResource White}" />
+                <Label
+                    Text="Últimos 10 movimientos del mes"
+                    FontSize="12"
+                    TextColor="{StaticResource PrimaryLight}" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- Lista de movimientos -->
+        <RefreshView
+            Grid.Row="1"
+            Command="{Binding CargarMovimientosCommand}"
+            IsRefreshing="{Binding EstaCargando}">
+
+            <CollectionView
+                ItemsSource="{Binding Movimientos}"
+                SelectionMode="None"
+                Margin="16,8">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:MovimientoDto">
+                        <Border Style="{StaticResource Card}" Margin="0,4">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DetalleCategoriaViewModel}}, Path=VerDetalleMovimientoCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+
+                                <Border
+                                    Grid.Column="0"
+                                    WidthRequest="44" HeightRequest="44"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 22"
+                                    BackgroundColor="{Binding Tipo, Converter={StaticResource TipoToColorConverter}}">
+                                    <Label
+                                        Text="{Binding Tipo, Converter={StaticResource TipoToEmojiConverter}}"
+                                        FontSize="20"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center" />
+                                </Border>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                    <Label
+                                        Text="{Binding Nombre}"
+                                        FontSize="15" FontAttributes="Bold"
+                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                    <Label
+                                        Text="{Binding Fecha, StringFormat='{0:dd MMM yyyy}'}"
+                                        Style="{StaticResource LabelSecundario}"
+                                        FontSize="12" />
+                                </VerticalStackLayout>
+
+                                <Label
+                                    Grid.Column="2"
+                                    Text="{Binding Cantidad, StringFormat='{0:C2}'}"
+                                    VerticalOptions="Center"
+                                    FontAttributes="Bold" FontSize="15"
+                                    TextColor="{Binding Tipo, Converter={StaticResource TipoToTextColorConverter}}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" Padding="0,48">
+                        <Label Text="📭" FontSize="48" HorizontalOptions="Center" />
+                        <Label
+                            Text="No hay movimientos este mes en esta categoría"
+                            Style="{StaticResource LabelSecundario}"
+                            HorizontalOptions="Center"
+                            HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+            </CollectionView>
+        </RefreshView>
+
+    </Grid>
+</ContentPage>

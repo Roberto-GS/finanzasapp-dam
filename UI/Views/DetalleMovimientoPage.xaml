@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.DetalleMovimientoPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    x:DataType="vm:DetalleMovimientoViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Cabecera -->
+        <Grid
+            Grid.Row="0"
+            BackgroundColor="{StaticResource Primary}"
+            ColumnDefinitions="Auto,*,Auto">
+            <Grid.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="16,48,16,16" />
+                    <On Platform="WinUI" Value="16,16,16,16" />
+                </OnPlatform>
+            </Grid.Padding>
+
+            <!-- Atrás en modo lectura -->
+            <Button
+                Grid.Column="0"
+                Text="←"
+                FontSize="20"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource White}"
+                IsVisible="{Binding ModoEdicion, Converter={StaticResource InvertedBoolConverter}}"
+                Command="{Binding VolverCommand}" />
+
+            <!-- Cancelar en modo edición -->
+            <Button
+                Grid.Column="0"
+                Text="✕"
+                FontSize="20"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource White}"
+                IsVisible="{Binding ModoEdicion}"
+                Command="{Binding CancelarEdicionCommand}" />
+
+            <!-- Título fijo -->
+            <Label
+                Grid.Column="1"
+                Text="Detalle"
+                FontSize="20" FontAttributes="Bold"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center"
+                IsVisible="{Binding ModoEdicion, Converter={StaticResource InvertedBoolConverter}}" />
+
+            <Label
+                Grid.Column="1"
+                Text="Editar Movimiento"
+                FontSize="20" FontAttributes="Bold"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center"
+                IsVisible="{Binding ModoEdicion}" />
+
+            <!-- Botón editar -->
+            <Button
+                Grid.Column="2"
+                Text="✏️"
+                FontSize="18"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource White}"
+                IsVisible="{Binding ModoEdicion,
+                    Converter={StaticResource InvertedBoolConverter}}"
+                Command="{Binding ActivarEdicionCommand}" />
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24" Spacing="0">
+
+                <!-- Error -->
+                <Border
+                    IsVisible="{Binding HayError}"
+                    BackgroundColor="{StaticResource GastoLight}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="12,8"
+                    Margin="0,0,0,16">
+                    <Label Text="{Binding MensajeError}" TextColor="{StaticResource Gasto}" FontSize="13" />
+                </Border>
+
+                <!-- MODO LECTURA -->
+                <VerticalStackLayout
+                    IsVisible="{Binding ModoEdicion, Converter={StaticResource InvertedBoolConverter}}"
+                    Spacing="0">
+
+                    <!-- Indicador tipo grande -->
+                    <Border
+                        WidthRequest="72" HeightRequest="72"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 36"
+                        HorizontalOptions="Center"
+                        Margin="0,0,0,16"
+                        BackgroundColor="{Binding Movimiento.Tipo, Converter={StaticResource TipoToColorConverter}}">
+                        <Label
+                            Text="{Binding Movimiento.Tipo, Converter={StaticResource TipoToEmojiConverter}}"
+                            FontSize="36"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center" />
+                    </Border>
+
+                    <!-- Cantidad grande -->
+                    <Label
+                        Text="{Binding Movimiento.Cantidad, StringFormat='{0:C2}'}"
+                        FontSize="36" FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                        TextColor="{Binding Movimiento.Tipo, Converter={StaticResource TipoToTextColorConverter}}"
+                        Margin="0,0,0,4" />
+
+                    <Label
+                        Text="{Binding Movimiento.Nombre}"
+                        FontSize="18" FontAttributes="Bold"
+                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                        HorizontalOptions="Center"
+                        Margin="0,0,0,24" />
+
+                    <!-- Ficha de datos -->
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="16">
+
+                            <Grid ColumnDefinitions="*,*">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label Text="Categoría" Style="{StaticResource LabelSecundario}" />
+                                    <Label
+                                        Text="{Binding Movimiento.CategoriaNombre, TargetNullValue='Sin categoría'}"
+                                        FontSize="15" FontAttributes="Bold"
+                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                    <Label Text="Fecha" Style="{StaticResource LabelSecundario}" />
+                                    <Label
+                                        Text="{Binding Movimiento.Fecha, StringFormat='{0:dd MMM yyyy}'}"
+                                        FontSize="15" FontAttributes="Bold"
+                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <BoxView HeightRequest="1" BackgroundColor="{StaticResource Gray200}" />
+
+                            <VerticalStackLayout Spacing="2"
+                                IsVisible="{Binding Movimiento.Descripcion, Converter={StaticResource NotNullConverter}}">
+                                <Label Text="Descripción" Style="{StaticResource LabelSecundario}" />
+                                <Label
+                                    Text="{Binding Movimiento.Descripcion}"
+                                    FontSize="15"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="2"
+                                IsVisible="{Binding Movimiento.Etiqueta, Converter={StaticResource NotNullConverter}}">
+                                <Label Text="Etiqueta" Style="{StaticResource LabelSecundario}" />
+                                <Border
+                                    BackgroundColor="{StaticResource PrimaryLight}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 12"
+                                    Padding="8,4"
+                                    HorizontalOptions="Start">
+                                    <Label
+                                        Text="{Binding Movimiento.Etiqueta}"
+                                        FontSize="13"
+                                        TextColor="{StaticResource Primary}" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Botón eliminar -->
+                    <Button
+                        Text="🗑 Eliminar movimiento"
+                        Style="{StaticResource SecondaryButton}"
+                        TextColor="{StaticResource Gasto}"
+                        BorderColor="{StaticResource Gasto}"
+                        Command="{Binding EliminarCommand}"
+                        Margin="0,24,0,0" />
+                </VerticalStackLayout>
+
+                <!-- MODO EDICIÓN -->
+                <VerticalStackLayout
+                    IsVisible="{Binding ModoEdicion}"
+                    Spacing="0">
+
+                    <Label Text="Nombre *" Style="{StaticResource LabelSecundario}" Margin="0,0,0,4"/>
+                    <Border StrokeThickness="1.5" Stroke="{StaticResource Gray200}"
+                            StrokeShape="RoundRectangle 10" Padding="12,0" Margin="0,0,0,16">
+                        <Entry Style="{StaticResource FormEntry}" Text="{Binding NombreEdicion}" />
+                    </Border>
+
+                    <Label Text="Cantidad *" Style="{StaticResource LabelSecundario}" Margin="0,0,0,4"/>
+                    <Border StrokeThickness="1.5" Stroke="{StaticResource Gray200}"
+                            StrokeShape="RoundRectangle 10" Padding="12,0" Margin="0,0,0,16">
+                        <Entry Style="{StaticResource FormEntry}" Text="{Binding CantidadEdicion}" Keyboard="Numeric" />
+                    </Border>
+
+                    <Label Text="Categoría" Style="{StaticResource LabelSecundario}" Margin="0,0,0,4"/>
+                    <Border StrokeThickness="1.5" Stroke="{StaticResource Gray200}"
+                            StrokeShape="RoundRectangle 10" Padding="4,0" Margin="0,0,0,16">
+                        <Picker
+                            Title="Selecciona una categoría"
+                            ItemsSource="{Binding Categorias}"
+                            SelectedItem="{Binding CategoriaEdicion}"
+                            ItemDisplayBinding="{Binding Nombre}"
+                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                            TitleColor="{StaticResource Gray400}" />
+                    </Border>
+
+                    <Label Text="Descripción" Style="{StaticResource LabelSecundario}" Margin="0,0,0,4"/>
+                    <Border StrokeThickness="1.5" Stroke="{StaticResource Gray200}"
+                            StrokeShape="RoundRectangle 10" Padding="12,8" Margin="0,0,0,16">
+                        <Editor
+                            Text="{Binding DescripcionEdicion}"
+                            Placeholder="Descripción opcional..."
+                            PlaceholderColor="{StaticResource Gray400}"
+                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                            FontSize="15"
+                            HeightRequest="80"
+                            AutoSize="Disabled" />
+                    </Border>
+
+                    <Label Text="Etiqueta" Style="{StaticResource LabelSecundario}" Margin="0,0,0,4"/>
+                    <Border StrokeThickness="1.5" Stroke="{StaticResource Gray200}"
+                            StrokeShape="RoundRectangle 10" Padding="12,0" Margin="0,0,0,24">
+                        <Entry Style="{StaticResource FormEntry}" Text="{Binding EtiquetaEdicion}" />
+                    </Border>
+
+                    <Button
+                        Text="Guardar cambios"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding GuardarEdicionCommand}"
+                        IsEnabled="{Binding NoEstaCargando}" />
+
+                    <Button
+                        Text="Cancelar"
+                        Style="{StaticResource SecondaryButton}"
+                        Command="{Binding CancelarEdicionCommand}" />
+
+                    <ActivityIndicator
+                        IsRunning="{Binding EstaCargando}"
+                        IsVisible="{Binding EstaCargando}"
+                        Color="{StaticResource Primary}"
+                        HorizontalOptions="Center"
+                        Margin="0,8" />
+                </VerticalStackLayout>
+
+                <BoxView>
+                    <BoxView.HeightRequest>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android" Value="32" />
+                            <On Platform="WinUI" Value="16" />
+                        </OnPlatform>
+                    </BoxView.HeightRequest>
+                </BoxView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

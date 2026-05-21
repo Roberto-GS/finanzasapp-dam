@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    xmlns:dto="clr-namespace:FinanzasApp.Core.DTOs.Movimiento;assembly=Core"
+    x:DataType="vm:DashboardViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <RefreshView
+        Command="{Binding CargarDatosCommand}"
+        IsRefreshing="{Binding EstaCargando}">
+
+        <ScrollView>
+            <VerticalStackLayout>
+
+                <!-- Cabecera -->
+                <Grid
+                    BackgroundColor="{StaticResource Primary}"
+                    Padding="24,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.Padding>
+                        <OnPlatform x:TypeArguments="Thickness">
+                            <On Platform="Android" Value="24,48,24,16" />
+                            <On Platform="WinUI" Value="24,16,24,16" />
+                        </OnPlatform>
+                    </Grid.Padding>
+
+                    <Label
+                        Grid.Row="0" Grid.Column="0"
+                        Text="{Binding NombreUsuario, StringFormat='Hola, {0} 👋'}"
+                        TextColor="{StaticResource White}"
+                        FontSize="20"
+                        FontAttributes="Bold" />
+
+                    <!-- Selector de mes -->
+                    <HorizontalStackLayout
+                        Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                        Spacing="12"
+                        Margin="0,12,0,0"
+                        HorizontalOptions="Center">
+
+                        <Button
+                            Text="‹"
+                            FontSize="22"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource White}"
+                            Padding="8,0"
+                            Command="{Binding MesAnteriorCommand}" />
+
+                        <Label
+                            Text="{Binding MesAnioTexto}"
+                            TextColor="{StaticResource White}"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            VerticalOptions="Center"/>
+
+                        <Button
+                            Text="›"
+                            FontSize="22"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource White}"
+                            Padding="8,0"
+                            Command="{Binding MesSiguienteCommand}" />
+                    </HorizontalStackLayout>
+                </Grid>
+
+                <!-- Tarjetas resumen -->
+                <Grid Padding="16,16,16,0" ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Ingresos -->
+                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource Card}"
+                            BackgroundColor="{StaticResource IngresoLight}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Ingresos" Style="{StaticResource LabelSecundario}" />
+                            <Label
+                                Text="{Binding TotalIngresos, StringFormat='{0:C2}'}"
+                                Style="{StaticResource LabelIngreso}"
+                                FontSize="18" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Gastos -->
+                    <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource Card}"
+                            BackgroundColor="{StaticResource GastoLight}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Gastos" Style="{StaticResource LabelSecundario}" />
+                            <Label
+                                Text="{Binding TotalGastos, StringFormat='{0:C2}'}"
+                                Style="{StaticResource LabelGasto}"
+                                FontSize="18" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Balance -->
+                    <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                            Style="{StaticResource Card}"
+                            BackgroundColor="{StaticResource BalanceLight}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="Balance del mes" Style="{StaticResource LabelSecundario}" />
+                                <Label
+                                    Text="{Binding Balance, StringFormat='{0:C2}'}"
+                                    FontSize="22"
+                                    FontAttributes="Bold"
+                                    TextColor="{StaticResource Balance}" />
+                            </VerticalStackLayout>
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding BalancePositivo, Converter={StaticResource BoolToEmojiConverter}}"
+                                FontSize="32"
+                                VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- Últimos movimientos -->
+                <VerticalStackLayout Padding="16,16,16,0">
+
+                    <Label
+                        Text="Últimos Movimientos"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                        Margin="0,0,0,8" />
+
+                    <CollectionView
+                        ItemsSource="{Binding UltimosMovimientos}"
+                        SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="dto:MovimientoDto">
+                                <Border Style="{StaticResource Card}" Margin="0,4">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DashboardViewModel}}, Path=VerDetalleMovimientoCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+
+                                        <!-- Indicador tipo -->
+                                        <Border
+                                            Grid.Column="0"
+                                            WidthRequest="44"
+                                            HeightRequest="44"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 22">
+                                            <Border.BackgroundColor>
+                                                <Binding Path="Tipo">
+                                                    <Binding.Converter>
+                                                        <StaticResource Key="TipoToColorConverter" />
+                                                    </Binding.Converter>
+                                                </Binding>
+                                            </Border.BackgroundColor>
+                                            <Label
+                                                Text="{Binding Tipo, Converter={StaticResource TipoToEmojiConverter}}"
+                                                FontSize="20"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center" />
+                                        </Border>
+
+                                        <!-- Nombre y categoría -->
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                            <Label
+                                                Text="{Binding Nombre}"
+                                                FontSize="15"
+                                                FontAttributes="Bold"
+                                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                            <Label
+                                                Text="{Binding CategoriaNombre, TargetNullValue='Sin categoría'}"
+                                                Style="{StaticResource LabelSecundario}" />
+                                        </VerticalStackLayout>
+
+                                        <!-- Cantidad -->
+                                        <Label
+                                            Grid.Column="2"
+                                            Text="{Binding Cantidad, StringFormat='{0:C2}'}"
+                                            VerticalOptions="Center"
+                                            FontAttributes="Bold"
+                                            FontSize="15">
+                                            <Label.TextColor>
+                                                <Binding Path="Tipo">
+                                                    <Binding.Converter>
+                                                        <StaticResource Key="TipoToTextColorConverter" />
+                                                    </Binding.Converter>
+                                                </Binding>
+                                            </Label.TextColor>
+                                        </Label>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                        <CollectionView.EmptyView>
+                            <VerticalStackLayout HorizontalOptions="Center" Padding="0,32">
+                                <Label Text="📭" FontSize="48" HorizontalOptions="Center" />
+                                <Label
+                                    Text="No hay movimientos este mes"
+                                    Style="{StaticResource LabelSecundario}"
+                                    HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </CollectionView.EmptyView>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <!-- Espaciado inferior (mayor en Android por la barra de navegación) -->
+                <BoxView>
+                    <BoxView.HeightRequest>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android" Value="80" />
+                            <On Platform="WinUI" Value="24" />
+                        </OnPlatform>
+                    </BoxView.HeightRequest>
+                </BoxView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+
+</ContentPage>

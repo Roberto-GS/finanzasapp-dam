@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.CategoriasPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    xmlns:dto="clr-namespace:FinanzasApp.Core.DTOs.Categoria;assembly=Core"
+    x:DataType="vm:CategoriasViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Cabecera -->
+        <VerticalStackLayout
+            Grid.Row="0"
+            BackgroundColor="{StaticResource Primary}">
+            <VerticalStackLayout.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="24,48,24,20" />
+                    <On Platform="WinUI" Value="24,16,24,20" />
+                </OnPlatform>
+            </VerticalStackLayout.Padding>
+            <Label
+                Text="Categorías"
+                FontSize="24" FontAttributes="Bold"
+                TextColor="{StaticResource White}" />
+        </VerticalStackLayout>
+
+        <!-- Lista -->
+        <RefreshView
+            Grid.Row="1"
+            Command="{Binding CargarCategoriasCommand}"
+            IsRefreshing="{Binding EstaCargando}">
+
+            <CollectionView
+                ItemsSource="{Binding Categorias}"
+                SelectionMode="None"
+                Margin="16,8">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:CategoriaDto">
+                        <Border Style="{StaticResource Card}" Margin="0,4">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CategoriasViewModel}}, Path=VerDetalleCategoriaCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+
+                                <!-- Color pill -->
+                                <Border
+                                    Grid.Column="0"
+                                    WidthRequest="44" HeightRequest="44"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 22"
+                                    BackgroundColor="{Binding Color, TargetNullValue='#2563EB'}">
+                                    <Label
+                                        Text="🏷"
+                                        FontSize="20"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center" />
+                                </Border>
+
+                                <Label
+                                    Grid.Column="1"
+                                    Text="{Binding Nombre}"
+                                    FontSize="16" FontAttributes="Bold"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                    VerticalOptions="Center" />
+
+                                <!-- Botón borrar -->
+                                <Button
+                                    Grid.Column="2"
+                                    Text="🗑"
+                                    FontSize="18"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource Gasto}"
+                                    Padding="8"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CategoriasViewModel}}, Path=EliminarCategoriaCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" Padding="0,48">
+                        <Label Text="🏷️" FontSize="48" HorizontalOptions="Center" />
+                        <Label
+                            Text="No tienes Categorías"
+                            Style="{StaticResource LabelSecundario}"
+                            HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Botón Flotante -->
+        <Button
+            Grid.Row="1"
+            Text="+"
+            Style="{StaticResource FabButton}"
+            Command="{Binding CrearCategoriaCommand}"
+            HorizontalOptions="End"
+            VerticalOptions="End">
+            <Button.Margin>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="0,0,16,80" />
+                    <On Platform="WinUI" Value="0,0,16,16" />
+                </OnPlatform>
+            </Button.Margin>
+        </Button>
+
+    </Grid>
+</ContentPage>

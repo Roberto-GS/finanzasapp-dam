@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FinanzasApp.UI.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:FinanzasApp.UI.Views"
+    Shell.FlyoutBehavior="Flyout"
+    FlyoutBackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray950}}">
+
+    <!-- Cabecera del Flyout -->
+    <Shell.FlyoutHeader>
+        <Grid
+            BackgroundColor="{StaticResource Primary}"
+            HeightRequest="160">
+            <Grid.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="24,48,24,24" />
+                    <On Platform="WinUI" Value="24,24,24,24" />
+                </OnPlatform>
+            </Grid.Padding>
+            <VerticalStackLayout Spacing="4" VerticalOptions="End">
+                <Label
+                    Text="💰 FinanzasApp"
+                    FontSize="22" FontAttributes="Bold"
+                    TextColor="{StaticResource White}" />
+                <Label
+                    Text="Gestión de finanzas personales"
+                    FontSize="13"
+                    TextColor="{StaticResource PrimaryLight}" />
+            </VerticalStackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <!-- Tabs -->
+    <TabBar>
+        <Tab Title="Inicio" Icon="icon_home.png">
+            <ShellContent
+                ContentTemplate="{DataTemplate views:DashboardPage}"
+                Route="DashboardPage" />
+        </Tab>
+
+        <Tab Title="Movimientos" Icon="icon_movements.png">
+            <ShellContent
+                ContentTemplate="{DataTemplate views:MovimientosPage}"
+                Route="MovimientosPage" />
+        </Tab>
+
+        <Tab Title="Categorías" Icon="icon_categories.png">
+            <ShellContent
+                ContentTemplate="{DataTemplate views:CategoriasPage}"
+                Route="CategoriasPage" />
+        </Tab>
+
+        <Tab Title="Objetivos" Icon="icon_goals.png">
+            <ShellContent
+                ContentTemplate="{DataTemplate views:ObjetivosPage}"
+                Route="ObjetivosPage" />
+        </Tab>
+    </TabBar>
+
+    <!-- Flyout Items -->
+    <FlyoutItem Title="Gráficas" Icon="icon_chart.png">
+        <ShellContent
+        ContentTemplate="{DataTemplate views:GraficasPage}"
+        Route="GraficasPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Ajustes" Icon="icon_settings.png">
+        <ShellContent
+        ContentTemplate="{DataTemplate views:AjustesPage}"
+        Route="AjustesPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Grupos" Icon="icon_groups.png">
+        <ShellContent
+        ContentTemplate="{DataTemplate views:GruposPage}"
+        Route="GruposPage" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Notificaciones" Icon="icon_bell.png">
+        <ShellContent
+        ContentTemplate="{DataTemplate views:NotificacionesPage}"
+        Route="NotificacionesPage" />
+    </FlyoutItem>
+
+</Shell>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.GruposPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    xmlns:dto="clr-namespace:FinanzasApp.Core.DTOs.Grupo;assembly=Core"
+    x:DataType="vm:GruposViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Cabecera -->
+        <Grid
+            Grid.Row="0"
+            BackgroundColor="{StaticResource Primary}"
+            ColumnDefinitions="Auto,*,Auto">
+            <Grid.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="16,48,16,16" />
+                    <On Platform="WinUI" Value="16,16,16,16" />
+                </OnPlatform>
+            </Grid.Padding>
+
+            <Button
+                Grid.Column="0"
+                Text="←"
+                FontSize="20"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource White}"
+                Command="{Binding VolverCommand}" />
+
+            <Label
+                Grid.Column="1"
+                Text="Grupos"
+                FontSize="24" FontAttributes="Bold"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+
+            <!-- Botón solicitudes -->
+            <Grid Grid.Column="2" WidthRequest="52" HeightRequest="52">
+                <Button
+                    Text="🔔"
+                    FontSize="22"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource White}"
+                    Command="{Binding VerSolicitudesCommand}" />
+                <Border
+                    IsVisible="{Binding SolicitudesPendientes, Converter={StaticResource NotNullConverter}}"
+                    BackgroundColor="{StaticResource Gasto}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 10"
+                    WidthRequest="20" 
+                    HeightRequest="20"
+                    HorizontalOptions="End"
+                    VerticalOptions="Start"
+                    Margin="0,4,4,0">
+                    <Label
+                        Text="{Binding SolicitudesPendientes}"
+                        FontSize="10" 
+                        FontAttributes="Bold"
+                        TextColor="{StaticResource White}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Lista -->
+        <RefreshView
+            Grid.Row="1"
+            Command="{Binding CargarCommand}"
+            IsRefreshing="{Binding EstaCargando}">
+
+            <CollectionView
+                ItemsSource="{Binding Grupos}"
+                SelectionMode="None"
+                Margin="16,8">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:GrupoDto">
+                        <Border Style="{StaticResource Card}" Margin="0,4">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GruposViewModel}}, Path=VerDetalleCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+
+                                <Border
+                                    Grid.Column="0"
+                                    WidthRequest="48" HeightRequest="48"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 24"
+                                    BackgroundColor="{StaticResource PrimaryLight}">
+                                    <Label
+                                        Text="👥"
+                                        FontSize="22"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center" />
+                                </Border>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                    <Label
+                                        Text="{Binding Nombre}"
+                                        FontSize="16" FontAttributes="Bold"
+                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                                    <Label
+                                        Text="{Binding TotalMiembros, StringFormat='{0} miembros'}"
+                                        Style="{StaticResource LabelSecundario}" />
+                                    <Label
+                                        Text="Admin"
+                                        FontSize="11"
+                                        TextColor="{StaticResource Primary}"
+                                        FontAttributes="Bold"
+                                        IsVisible="{Binding SoyCreador}" />
+                                </VerticalStackLayout>
+
+                                <!-- Botón eliminar solo si es creador -->
+                                <Button
+                                    Grid.Column="2"
+                                    Text="🗑"
+                                    FontSize="18"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource Gasto}"
+                                    IsVisible="{Binding SoyCreador}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GruposViewModel}}, Path=EliminarGrupoCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" Padding="0,48">
+                        <Label Text="👥" FontSize="48" HorizontalOptions="Center" />
+                        <Label
+                            Text="No perteneces a ningún grupo aún"
+                            Style="{StaticResource LabelSecundario}"
+                            HorizontalOptions="Center" />
+                        <Label
+                            Text="Crea uno o espera una invitación"
+                            Style="{StaticResource LabelSecundario}"
+                            HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Botón Flotante -->
+        <Button
+            Grid.Row="1"
+            Text="+"
+            Style="{StaticResource FabButton}"
+            Command="{Binding CrearGrupoCommand}"
+            HorizontalOptions="End"
+            VerticalOptions="End">
+            <Button.Margin>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="0,0,16,80" />
+                    <On Platform="WinUI" Value="0,0,16,16" />
+                </OnPlatform>
+            </Button.Margin>
+        </Button>
+
+    </Grid>
+</ContentPage>

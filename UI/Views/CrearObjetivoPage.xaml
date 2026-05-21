@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.CrearObjetivoPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    x:DataType="vm:CrearObjetivoViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Cabecera -->
+        <Grid
+            Grid.Row="0"
+            BackgroundColor="{StaticResource Primary}"
+            ColumnDefinitions="Auto,*">
+            <Grid.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="16,48,16,16" />
+                    <On Platform="WinUI" Value="16,16,16,16" />
+                </OnPlatform>
+            </Grid.Padding>
+
+            <Button
+                Grid.Column="0"
+                Text="←" 
+                FontSize="20"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource White}"
+                Command="{Binding CancelarCommand}" />
+
+            <Label
+                Grid.Column="1"
+                Text="{Binding TituloPagina}"
+                FontSize="20" 
+                FontAttributes="Bold"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+        </Grid>
+
+        <!-- Formulario -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24" Spacing="16">
+
+                <!-- Tipo de objetivo -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label
+                            Text="Tipo de objetivo"
+                            Style="{StaticResource LabelSecundario}" />
+                        <Border
+                            BackgroundColor="{AppThemeBinding Light={StaticResource InputBackgroundLight}, Dark={StaticResource InputBackgroundDark}}"
+                            Stroke="{StaticResource Gray200}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8">
+                            <Picker
+                                ItemsSource="{Binding TiposObjetivo}"
+                                ItemDisplayBinding="{Binding Nombre}"
+                                SelectedItem="{Binding TipoSeleccionado}"
+                                Title="Selecciona un tipo"
+                                TitleColor="{StaticResource TextSecondary}"
+                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                Margin="12,0" />
+                        </Border>
+
+                        <Border
+                            IsVisible="{Binding TextoAyuda, Converter={StaticResource NotNullConverter}}"
+                            StrokeThickness="1"
+                            Stroke="{StaticResource Primary}"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="12,8"
+                            BackgroundColor="#EFF6FF">
+                            <Label
+                                Text="{Binding TextoAyuda}"
+                                FontSize="12"
+                                TextColor="#1E40AF" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Descripción -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label
+                            Text="Descripción (Opcional)"
+                            Style="{StaticResource LabelSecundario}" />
+                        <Border
+                            BackgroundColor="{AppThemeBinding Light={StaticResource InputBackgroundLight}, Dark={StaticResource InputBackgroundDark}}"
+                            Stroke="{StaticResource Gray200}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8">
+                            <Entry
+                                Text="{Binding Descripcion}"
+                                Placeholder="Introduzca la descripción"
+                                PlaceholderColor="{StaticResource TextSecondary}"
+                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                BackgroundColor="Transparent"
+                                Margin="12,8" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Cantidad objetivo -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label
+                            Text="Cantidad Objetivo"
+                            Style="{StaticResource LabelSecundario}" />
+                        <Border
+                            BackgroundColor="{AppThemeBinding Light={StaticResource InputBackgroundLight}, Dark={StaticResource InputBackgroundDark}}"
+                            Stroke="{StaticResource Gray200}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8">
+                            <Entry
+                                Text="{Binding CantidadObjetivo}"
+                                Placeholder="0,00"
+                                PlaceholderColor="{StaticResource TextSecondary}"
+                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                BackgroundColor="Transparent"
+                                Keyboard="Numeric"
+                                Margin="12,8" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Categoría -->
+                <Border
+                    Style="{StaticResource Card}"
+                    IsVisible="{Binding MostrarCategoria}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label
+                            Text="Categoría"
+                            Style="{StaticResource LabelSecundario}"
+                            IsVisible="{Binding CategoriaObligatoria}" />
+                        <Label
+                            Text="Categoría (opcional)"
+                            Style="{StaticResource LabelSecundario}"
+                            IsVisible="{Binding CategoriaObligatoria, Converter={StaticResource InvertedBoolConverter}}" />
+                        <Border
+                            BackgroundColor="{AppThemeBinding Light={StaticResource InputBackgroundLight}, Dark={StaticResource InputBackgroundDark}}"
+                            Stroke="{StaticResource Gray200}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8">
+                            <Picker
+                                ItemsSource="{Binding Categorias}"
+                                ItemDisplayBinding="{Binding Nombre}"
+                                SelectedItem="{Binding CategoriaSeleccionada}"
+                                Title="Selecciona una categoría"
+                                TitleColor="{StaticResource TextSecondary}"
+                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                Margin="12,0" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Fechas -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label
+                            Text="Periodo del objetivo"
+                            FontSize="15" FontAttributes="Bold"
+                            TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label
+                                    Text="Fecha inicio"
+                                    Style="{StaticResource LabelSecundario}" />
+                                <Border
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource InputBackgroundLight}, Dark={StaticResource InputBackgroundDark}}"
+                                    Stroke="{StaticResource Gray200}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 8">
+                                    <DatePicker
+                                        Date="{Binding FechaInicio}"
+                                        Format="dd/MM/yyyy"
+                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                        BackgroundColor="Transparent"
+                                        Margin="8,4" />
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                <Label
+                                    Text="Fecha fin"
+                                    Style="{StaticResource LabelSecundario}" />
+                                <Border
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource InputBackgroundLight}, Dark={StaticResource InputBackgroundDark}}"
+                                    Stroke="{StaticResource Gray200}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 8">
+                                    <DatePicker
+                                        Date="{Binding FechaFin}"
+                                        Format="dd/MM/yyyy"
+                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                        BackgroundColor="Transparent"
+                                        Margin="8,4" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Error -->
+                <Border
+                    IsVisible="{Binding HayError}"
+                    BackgroundColor="{StaticResource GastoLight}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="16,10">
+                    <Label
+                        Text="{Binding MensajeError}"
+                        TextColor="{StaticResource Gasto}"
+                        FontSize="13" />
+                </Border>
+
+                <!-- Botón guardar -->
+                <Button
+                    Text="{Binding TextoBoton}"
+                    Style="{StaticResource PrimaryButton}"
+                    Command="{Binding GuardarCommand}"
+                    IsEnabled="{Binding NoEstaCargando}"
+                    Margin="0,8,0,0" />
+
+                <BoxView>
+                    <BoxView.HeightRequest>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android" Value="32" />
+                            <On Platform="WinUI" Value="16" />
+                        </OnPlatform>
+                    </BoxView.HeightRequest>
+                </BoxView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

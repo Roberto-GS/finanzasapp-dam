@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.DetalleObjetivoPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    x:DataType="vm:DetalleObjetivoViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Cabecera -->
+        <Grid
+            Grid.Row="0"
+            BackgroundColor="{StaticResource Primary}"
+            ColumnDefinitions="Auto,*,Auto">
+            <Grid.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="16,48,16,16" />
+                    <On Platform="WinUI" Value="16,16,16,16" />
+                </OnPlatform>
+            </Grid.Padding>
+
+            <Button
+                Grid.Column="0"
+                Text="←" FontSize="20"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource White}"
+                Command="{Binding VolverCommand}" />
+
+            <Label
+                Grid.Column="1"
+                Text="Detalle objetivo"
+                FontSize="20" FontAttributes="Bold"
+                TextColor="{StaticResource White}"
+                VerticalOptions="Center" />
+
+            <Button
+                Grid.Column="2"
+                Text="✏️" FontSize="18"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource White}"
+                Command="{Binding EditarCommand}" />
+        </Grid>
+
+        <!-- Contenido -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24" Spacing="16">
+
+                <!-- Icono y estado -->
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                    <Label
+                        Text="🎯"
+                        FontSize="56"
+                        HorizontalOptions="Center" />
+
+                    <!-- Advertencia vencido -->
+                    <Border
+                        IsVisible="{Binding Objetivo.EstaVencido}"
+                        BackgroundColor="{StaticResource GastoLight}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="12,6"
+                        HorizontalOptions="Center">
+                        <Label
+                            Text="⚠️ Este objetivo ha vencido"
+                            TextColor="{StaticResource Gasto}"
+                            FontSize="13" FontAttributes="Bold" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Ficha principal -->
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="16">
+
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Descripción" Style="{StaticResource LabelSecundario}" />
+                            <Label
+                                Text="{Binding Objetivo.Descripcion, TargetNullValue='Sin descripción'}"
+                                FontSize="16" FontAttributes="Bold"
+                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                        </VerticalStackLayout>
+
+                        <BoxView HeightRequest="1" BackgroundColor="{StaticResource Gray200}" />
+
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="16">
+
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                                <Label Text="Tipo" Style="{StaticResource LabelSecundario}" />
+                                <Label
+                                    Text="{Binding Objetivo.TipoNombre, TargetNullValue='-'}"
+                                    FontSize="15" FontAttributes="Bold"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Row="0" Grid.Column="1" Spacing="2">
+                                <Label Text="Periodo" Style="{StaticResource LabelSecundario}" />
+                                <Label
+                                    Text="{Binding Objetivo.Periodo, Converter={StaticResource PeriodoToStringConverter}}"
+                                    FontSize="15" FontAttributes="Bold"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="0" Spacing="2">
+                                <Label Text="Categoría" Style="{StaticResource LabelSecundario}" />
+                                <Label
+                                    Text="{Binding Objetivo.CategoriaNombre, TargetNullValue='Sin categoría'}"
+                                    FontSize="15" FontAttributes="Bold"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Row="1" Grid.Column="1" Spacing="2"
+                                IsVisible="{Binding Objetivo.CantidadObjetivo, Converter={StaticResource NotNullConverter}}">
+                                <Label Text="Cantidad objetivo" Style="{StaticResource LabelSecundario}" />
+                                <Label
+                                    Text="{Binding Objetivo.CantidadObjetivo, StringFormat='{0:C2}'}"
+                                    FontSize="15" FontAttributes="Bold"
+                                    TextColor="{StaticResource Primary}" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <BoxView HeightRequest="1" BackgroundColor="{StaticResource Gray200}" />
+
+                        <!-- Fechas -->
+                        <Grid ColumnDefinitions="*,*">
+                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="Fecha inicio" Style="{StaticResource LabelSecundario}" />
+                                <Label
+                                    Text="{Binding Objetivo.FechaInicio, StringFormat='{0:dd/MM/yyyy}'}"
+                                    FontSize="15" FontAttributes="Bold"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                <Label Text="Fecha fin" Style="{StaticResource LabelSecundario}" />
+                                <Label
+                                    Text="{Binding Objetivo.FechaFin, StringFormat='{0:dd/MM/yyyy}'}"
+                                    FontSize="15" FontAttributes="Bold"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Botón eliminar -->
+                <Button
+                    Text="🗑 Eliminar objetivo"
+                    Style="{StaticResource SecondaryButton}"
+                    TextColor="{StaticResource Gasto}"
+                    BorderColor="{StaticResource Gasto}"
+                    Command="{Binding EliminarCommand}" />
+
+                <BoxView>
+                    <BoxView.HeightRequest>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android" Value="32" />
+                            <On Platform="WinUI" Value="16" />
+                        </OnPlatform>
+                    </BoxView.HeightRequest>
+                </BoxView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

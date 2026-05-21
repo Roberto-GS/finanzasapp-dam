@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="FinanzasApp.UI.Views.GraficasPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:FinanzasApp.UI.ViewModels"
+    xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+    xmlns:dto="clr-namespace:FinanzasApp.Core.DTOs.Movimiento;assembly=Core"
+    x:DataType="vm:GraficasViewModel"
+    BackgroundColor="{AppThemeBinding Light={StaticResource PageBackgroundLight}, Dark={StaticResource PageBackgroundDark}}"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Cabecera -->
+        <VerticalStackLayout
+            Grid.Row="0"
+            BackgroundColor="{StaticResource Primary}"> 
+            <VerticalStackLayout.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="16,48,16,16" />
+                    <On Platform="WinUI" Value="16,16,16,16" />
+                </OnPlatform>
+            </VerticalStackLayout.Padding>
+
+            <!-- Fila título con flecha -->
+            <Grid ColumnDefinitions="Auto,*" Margin="0,0,0,12">
+                <Button
+                    Grid.Column="0"
+                    Text="←"
+                    FontSize="20"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource White}"
+                    Command="{Binding VolverCommand}" />
+                <Label
+                    Grid.Column="1"
+                    Text="Gráficas"
+                    FontSize="24" FontAttributes="Bold"
+                    TextColor="{StaticResource White}"
+                    VerticalOptions="Center" />
+            </Grid>
+
+            <!-- Selector Gastos / Ingresos -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+
+                <!-- Botón Gastos -->
+                <Border
+                    Grid.Column="0"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 10"
+                    Stroke="{StaticResource Gasto}"
+                    Padding="0"
+                    BackgroundColor="{Binding MostrandoGastos, Converter={StaticResource GastosActivoColorConverter}}">
+                    <Button
+                        Text="🔴 Gastos"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource White}"
+                        FontAttributes="Bold"
+                        FontSize="15"
+                        Command="{Binding SeleccionarGastoCommand}" />
+                </Border>
+
+                <!-- Botón Ingresos -->
+                <Border
+                    Grid.Column="1"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 10"
+                    Stroke="{StaticResource Ingreso}"
+                    Padding="0"
+                    BackgroundColor="{Binding MostrandoIngresos, Converter={StaticResource IngresosActivoColorConverter}}">
+                    <Button
+                        Text="🟢 Ingresos"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource White}"
+                        FontAttributes="Bold"
+                        FontSize="15"
+                        Command="{Binding SeleccionarIngresoCommand}" />
+                </Border>
+            </Grid>
+        </VerticalStackLayout>
+
+        <!-- Contenido -->
+        <RefreshView
+            Grid.Row="1"
+            Command="{Binding CargarGraficasCommand}"
+            IsRefreshing="{Binding EstaCargando}">
+
+            <ScrollView>
+                <VerticalStackLayout Padding="16" Spacing="16">
+
+                    <!-- Selector de mes -->
+                    <Border Style="{StaticResource Card}">
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="12">
+                            <Button
+                                Text="‹" FontSize="22"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}"
+                                Command="{Binding MesAnteriorCommand}" />
+                            <Label
+                                Text="{Binding MesAnioTexto}"
+                                FontSize="16" FontAttributes="Bold"
+                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                VerticalOptions="Center"/>
+                            <Button
+                                Text="›" FontSize="22"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource Primary}"
+                                Command="{Binding MesSiguienteCommand}" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <!-- Gráfica circular -->
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="12">
+
+                            <Label
+                                Text="Distribución por categoría"
+                                FontSize="16" FontAttributes="Bold"
+                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}" />
+
+                            <Label
+                                Text="{Binding TotalGeneral, StringFormat='Total: {0:C2}'}"
+                                Style="{StaticResource LabelSecundario}" />
+
+                            <!-- Sin datos -->
+                            <VerticalStackLayout
+                                IsVisible="{Binding SinDatosCircular}"
+                                HorizontalOptions="Center"
+                                Padding="0,16">
+                                <Label Text="📊" FontSize="40" HorizontalOptions="Center" />
+                                <Label
+                                    Text="Sin movimientos este mes"
+                                    Style="{StaticResource LabelSecundario}"
+                                    HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+
+                            <!-- Gráfica -->
+                            <microcharts:ChartView
+                                Chart="{Binding GraficaCircular}"
+                                HeightRequest="240"
+                                IsVisible="{Binding SinDatosCircular,
+                                    Converter={StaticResource InvertedBoolConverter}}" />
+
+                            <!-- Leyenda -->
+                            <CollectionView
+                                ItemsSource="{Binding DatosCategorias}"
+                                SelectionMode="None"
+                                IsVisible="{Binding SinDatosCircular,
+                                    Converter={StaticResource InvertedBoolConverter}}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="dto:GraficaCategoriaDto">
+                                        <Grid
+                                            ColumnDefinitions="Auto,*,Auto"
+                                            ColumnSpacing="8"
+                                            Padding="0,4">
+                                            <Border
+                                                Grid.Column="0"
+                                                WidthRequest="12" HeightRequest="12"
+                                                StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 6"
+                                                BackgroundColor="{Binding CategoriaColor}"
+                                                VerticalOptions="Center" />
+                                            <Label
+                                                Grid.Column="1"
+                                                Text="{Binding CategoriaNombre}"
+                                                FontSize="13"
+                                                TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                                VerticalOptions="Center" />
+                                            <Label
+                                                Grid.Column="2"
+                                                FontSize="13"
+                                                TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
+                                                VerticalOptions="Center">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding Total, StringFormat='{0:C2}'}" />
+                                                        <Span Text="  " />
+                                                        <Span Text="{Binding Porcentaje, StringFormat='{0}%'}"
+                                                              TextColor="{StaticResource Primary}" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Gráfica de barras -->
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="12">
+
+                            <!-- Cabecera con selector de año -->
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label
+                                    Grid.Column="0"
+                                    Text="Evolución mensual"
+                                    FontSize="16" FontAttributes="Bold"
+                                    TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                    VerticalOptions="Center" />
+
+                                <HorizontalStackLayout Grid.Column="1" Spacing="4">
+                                    <Button
+                                        Text="‹" FontSize="18"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource Primary}"
+                                        Padding="4,0"
+                                        Command="{Binding AnioAnteriorCommand}" />
+                                    <Label
+                                        Text="{Binding AnioSeleccionado}"
+                                        FontSize="15" FontAttributes="Bold"
+                                        TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
+                                        VerticalOptions="Center"
+                                        MinimumWidthRequest="44"
+                                        HorizontalTextAlignment="Center" />
+                                    <Button
+                                        Text="›" FontSize="18"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource Primary}"
+                                        Padding="4,0"
+                                        Command="{Binding AnioSiguienteCommand}" />
+                                </HorizontalStackLayout>
+                            </Grid>
+
+                            <!-- Sin datos -->
+                            <VerticalStackLayout
+                                IsVisible="{Binding SinDatosBarras}"
+                                HorizontalOptions="Center"
+                                Padding="0,16">
+                                <Label Text="📈" FontSize="40" HorizontalOptions="Center" />
+                                <Label
+                                    Text="Sin movimientos este año"
+                                    Style="{StaticResource LabelSecundario}"
+                                    HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+
+                            <!-- Gráfica -->
+                            <microcharts:ChartView
+                                Chart="{Binding GraficaBarras}"
+                                HeightRequest="220"
+                                IsVisible="{Binding SinDatosBarras, Converter={StaticResource InvertedBoolConverter}}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <BoxView>
+                        <BoxView.HeightRequest>
+                            <OnPlatform x:TypeArguments="x:Double">
+                                <On Platform="Android" Value="80" />
+                                <On Platform="WinUI" Value="24" />
+                            </OnPlatform>
+                        </BoxView.HeightRequest>
+                    </BoxView>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+
+    </Grid>
+</ContentPage>
