@@ -25,11 +25,11 @@ public class ApiService : IApiService
     };
 
 #if ANDROID
-    private const string BaseUrl = "http://192.168.1.XX:5281/api/";
+    private const string BaseUrl = "https://finanzasapp-dam-production.up.railway.app/api/";
 #elif WINDOWS
-    private const string BaseUrl = "https://localhost:7219/api/";
+    private const string BaseUrl = "https://finanzasapp-dam-production.up.railway.app/api/";
 #else
-    private const string BaseUrl = "https://localhost:7219/api/";
+    private const string BaseUrl = "https://finanzasapp-dam-production.up.railway.app/api/";
 #endif
 
     public ApiService(ISessionService sessionService, INavigationService navigationService)

@@ -135,10 +135,11 @@ WebApplication app = builder.Build();
 // El middleware de errores debe ser el primero para capturar todo
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
+app.UseSwagger();
+app.UseSwaggerUI();
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
     app.UseCors("DesarrolloPolicy");
 }
 
