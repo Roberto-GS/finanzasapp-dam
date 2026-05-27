@@ -152,12 +152,8 @@ public class GruposController : ControllerBase
         List<MiembroGrupoDto> ranking = new List<MiembroGrupoDto>();
         foreach (Usuario miembro in miembros)
         {
-            decimal gastos = await _movimientoRepository
-                .ObtenerTotalPorTipoYMes(miembro.Id,
-                    Core.Enums.TipoMovimiento.Gasto, ahora.Year, ahora.Month);
-            decimal ingresos = await _movimientoRepository
-                .ObtenerTotalPorTipoYMes(miembro.Id,
-                    Core.Enums.TipoMovimiento.Ingreso, ahora.Year, ahora.Month);
+            decimal gastos = await _movimientoRepository.ObtenerTotalPorTipoYMes(miembro.Id, Core.Enums.TipoMovimiento.Gasto, ahora.Year, ahora.Month);
+            decimal ingresos = await _movimientoRepository.ObtenerTotalPorTipoYMes(miembro.Id, Core.Enums.TipoMovimiento.Ingreso, ahora.Year, ahora.Month);
 
             ranking.Add(new MiembroGrupoDto
             {
@@ -244,8 +240,7 @@ public class GruposController : ControllerBase
     public async Task<IActionResult> ObtenerSolicitudesPendientes()
     {
         int usuarioId = User.ObtenerUsuarioId();
-        IEnumerable<SolicitudGrupo> solicitudes = await _solicitudRepository
-            .ObtenerSolicitudesPendientesPorUsuario(usuarioId);
+        IEnumerable<SolicitudGrupo> solicitudes = await _solicitudRepository.ObtenerSolicitudesPendientesPorUsuario(usuarioId);
 
         IEnumerable<SolicitudGrupoDto> resultado = solicitudes.Select(s => new SolicitudGrupoDto
         {

@@ -217,8 +217,7 @@ public class MovimientosController : ControllerBase
             return BadRequest("No se pueden consultar meses futuros");
 
         int usuarioId = User.ObtenerUsuarioId();
-        IEnumerable<Movimiento> movimientos = await _movimientoRepository
-            .ObtenerPorUsuarioMesTipo(usuarioId, anio, mes, tipo);
+        IEnumerable<Movimiento> movimientos = await _movimientoRepository.ObtenerPorUsuarioMesTipo(usuarioId, anio, mes, tipo);
 
         decimal total = movimientos.Sum(m => m.Cantidad);
 
@@ -256,19 +255,16 @@ public class MovimientosController : ControllerBase
             return BadRequest("No se pueden consultar años futuros");
 
         int usuarioId = User.ObtenerUsuarioId();
-        IEnumerable<Movimiento> movimientos = await _movimientoRepository
-            .ObtenerPorUsuarioTipoYAnio(usuarioId, tipo, anio);
+        IEnumerable<Movimiento> movimientos = await _movimientoRepository.ObtenerPorUsuarioTipoYAnio(usuarioId, tipo, anio);
 
-        var mesesNombres = new[]
-        {
-        "Ene", "Feb", "Mar", "Abr", "May", "Jun",
-        "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
-    };
+        string[] mesesNombres =
+        [
+            "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+            "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
+        ];
 
         // Solo mostramos hasta el mes actual si es el año en curso
-        int mesActual = anio == DateTime.UtcNow.Year
-            ? DateTime.UtcNow.Month
-            : 12;
+        int mesActual = anio == DateTime.UtcNow.Year ? DateTime.UtcNow.Month : 12;
 
         List<GraficaMensualDto> resultado = Enumerable.Range(1, mesActual)
             .Select(mes => new GraficaMensualDto

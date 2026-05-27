@@ -59,7 +59,7 @@
                                 ItemDisplayBinding="{Binding Nombre}"
                                 SelectedItem="{Binding TipoSeleccionado}"
                                 Title="Selecciona un tipo"
-                                TitleColor="{StaticResource TextSecondary}"
+                                TitleColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                 TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                 Margin="12,0" />
                         </Border>
@@ -93,7 +93,7 @@
                             <Entry
                                 Text="{Binding Descripcion}"
                                 Placeholder="Introduzca la descripción"
-                                PlaceholderColor="{StaticResource TextSecondary}"
+                                PlaceholderColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                 TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                 BackgroundColor="Transparent"
                                 Margin="12,8" />
@@ -115,7 +115,7 @@
                             <Entry
                                 Text="{Binding CantidadObjetivo}"
                                 Placeholder="0,00"
-                                PlaceholderColor="{StaticResource TextSecondary}"
+                                PlaceholderColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                 TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                 BackgroundColor="Transparent"
                                 Keyboard="Numeric"
@@ -147,7 +147,7 @@
                                 ItemDisplayBinding="{Binding Nombre}"
                                 SelectedItem="{Binding CategoriaSeleccionada}"
                                 Title="Selecciona una categoría"
-                                TitleColor="{StaticResource TextSecondary}"
+                                TitleColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"
                                 TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"
                                 Margin="12,0" />
                         </Border>

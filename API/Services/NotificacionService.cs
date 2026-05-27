@@ -38,8 +38,7 @@ public class NotificacionService : INotificacionService
         DateTime ahora = DateTime.UtcNow;
 
         // Notificaciones persistentes no leídas
-        IEnumerable<Notificacion> persistentes =
-            await _notificacionRepository.ObtenerPorUsuarioId(usuarioId);
+        IEnumerable<Notificacion> persistentes = await _notificacionRepository.ObtenerPorUsuarioId(usuarioId);
 
         // Guardamos los IDs de objetivos que ya tienen notificación persistente
         // para no generar dinámicas duplicadas para los mismos objetivos
@@ -86,8 +85,7 @@ public class NotificacionService : INotificacionService
             }
 
             // Objetivos próximos a vencer
-            IEnumerable<Objetivo> proximosAVencer =
-                await _objetivoRepository.ObtenerProximosAVencer(usuarioId, 3);
+            IEnumerable<Objetivo> proximosAVencer = await _objetivoRepository.ObtenerProximosAVencer(usuarioId, 3);
 
             foreach (Objetivo obj in proximosAVencer)
             {
@@ -217,8 +215,7 @@ public class NotificacionService : INotificacionService
 
                 if (obj.SeHaCumplido)
                 {
-                    bool yaExiste = await _notificacionRepository
-                        .ExisteNotificacionObjetivo(usuarioId, obj.Id, "cumplido");
+                    bool yaExiste = await _notificacionRepository.ExisteNotificacionObjetivo(usuarioId, obj.Id, "cumplido");
 
                     if (!yaExiste)
                         await _notificacionRepository.Crear(new Notificacion

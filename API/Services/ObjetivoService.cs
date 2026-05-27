@@ -25,8 +25,7 @@ public class ObjetivoService : IObjetivoService
     /// <inheritdoc/>
     public async Task<IEnumerable<ObjetivoConProgresoDto>> EvaluarTodos(int usuarioId)
     {
-        IEnumerable<Objetivo> objetivos =
-            await _objetivoRepository.ObtenerPorUsuarioId(usuarioId);
+        IEnumerable<Objetivo> objetivos = await _objetivoRepository.ObtenerPorUsuarioId(usuarioId);
 
         List<Objetivo> activos = objetivos.Where(o => o.Activo).ToList();
         List<ObjetivoConProgresoDto> resultado = new List<ObjetivoConProgresoDto>();

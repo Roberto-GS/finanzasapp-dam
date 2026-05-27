@@ -179,13 +179,13 @@ public class ObjetivosController : ControllerBase
             {
                 Id = 1,
                 Nombre = "Ahorro",
-                Descripcion = "Controla que tu balance mensual supere una cantidad determinada"
+                Descripcion = "Controla que tu balance supere una cantidad determinada"
             },
             new TipoObjetivoDto
             {
                 Id = 2,
                 Nombre = "Límite de gasto",
-                Descripcion = "Alerta si superas un límite de gasto mensual"
+                Descripcion = "Alerta si superas un límite de gasto"
             },
             new TipoObjetivoDto
             {
@@ -197,7 +197,7 @@ public class ObjetivosController : ControllerBase
             {
                 Id = 4,
                 Nombre = "Reducción de deuda",
-                Descripcion = "Seguimiento de la reducción del gasto mensual"
+                Descripcion = "Seguimiento de la reducción del gasto"
             }
         };
 

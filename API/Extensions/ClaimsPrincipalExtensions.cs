@@ -15,12 +15,8 @@ public static class ClaimsPrincipalExtensions
     /// <exception cref="UnauthorizedAccessException"></exception>
     public static int ObtenerUsuarioId(this ClaimsPrincipal usuario)
     {
-        Claim? claim = usuario.FindFirst(ClaimTypes.NameIdentifier)
-                 ?? usuario.FindFirst("sub")
-                 ?? throw new UnauthorizedAccessException("Token inválido");
+        Claim? claim = usuario.FindFirst(ClaimTypes.NameIdentifier) ?? usuario.FindFirst("sub") ?? throw new UnauthorizedAccessException("Token inválido");
 
-        return int.TryParse(claim.Value, out var id)
-            ? id
-            : throw new UnauthorizedAccessException("Token inválido");
+        return int.TryParse(claim.Value, out var id) ? id : throw new UnauthorizedAccessException("Token inválido");
     }
 }
