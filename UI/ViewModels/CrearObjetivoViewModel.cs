@@ -141,14 +141,14 @@ public partial class CrearObjetivoViewModel : BaseViewModel
                 CategoriaObligatoria = false;
                 CategoriaSeleccionada = null;
                 TextoAyuda = "El ahorro mide tu balance (ingresos - gastos)" +
-                             "en el periodo. No filtra por categoría";
+                             " en el periodo. No filtra por categoría";
                 break;
 
             case 2: // Límite de gasto
                 MostrarCategoria = true;
                 CategoriaObligatoria = false;
                 TextoAyuda = "Controla que tus gastos no superen el límite en el periodo" +
-                             "Puedes limitarlo a una categoría concreta o a todos tus gastos";
+                             " Puedes limitarlo a una categoría concreta o a todos tus gastos";
                 break;
 
             case 3: // Meta de ingreso
@@ -156,14 +156,14 @@ public partial class CrearObjetivoViewModel : BaseViewModel
                 CategoriaObligatoria = false;
                 CategoriaSeleccionada = null;
                 TextoAyuda = "Controla que tus ingresos totales alcancen " +
-                             "la cantidad objetivo en el periodo";
+                             " la cantidad objetivo en el periodo";
                 break;
 
             case 4: // Reducción de deuda
                 MostrarCategoria = true;
                 CategoriaObligatoria = true;
                 TextoAyuda = "Controla que los gastos de una categoría concreta " +
-                             "se mantengan por debajo del límite. La categoría es obligatoria";
+                             " se mantengan por debajo del límite. La categoría es obligatoria";
                 break;
         }
     }

@@ -15,7 +15,7 @@
             <BoxView
                 Grid.Row="0"
                 BackgroundColor="{StaticResource Primary}"
-                HeightRequest="280"
+                HeightRequest="300"
                 VerticalOptions="Fill" />
 
             <!-- Tarjeta central -->
@@ -29,11 +29,11 @@
                 <VerticalStackLayout Spacing="0" Padding="8">
 
                     <!-- Logo / Título -->
-                    <Label
-                        Text="💰"
-                        FontSize="52"
+                    <Image
+                        Source="logo.png"
+                        HeightRequest="64"
                         HorizontalOptions="Center"
-                        Margin="0,0,0,8"/>
+                        Margin="0,0,0,8" />
 
                     <Label
                         Text="FinanzasApp"
@@ -98,18 +98,6 @@
                             ReturnType="Done"
                             ReturnCommand="{Binding LoginCommand}" />
                     </Border>
-
-                    <!-- Recuperar contraseña -->
-                    <Label
-                        Text="¿Olvidaste tu contraseña?"
-                        TextColor="{StaticResource Primary}"
-                        FontSize="13"
-                        HorizontalOptions="End"
-                        Margin="0,8,0,16">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding RecuperarPasswordCommand}" />
-                        </Label.GestureRecognizers>
-                    </Label>
 
                     <!-- Botón Login -->
                     <Button

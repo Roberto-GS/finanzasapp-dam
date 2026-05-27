@@ -12,8 +12,7 @@ public interface INotificacionRepository
     /// <summary>
     /// Comprobamos si ya existe una notificación persistente para un objetivo y tipo concreto
     /// </summary>
-    Task<bool> ExisteNotificacionObjetivo(
-        int usuarioId, int objetivoId, string tipo);
+    Task<bool> ExisteNotificacionObjetivo(int usuarioId, int objetivoId, string tipo);
 
     /// <summary>
     /// Creamos una nueva notificación presistente en la base de datos
