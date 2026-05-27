@@ -45,6 +45,13 @@ public partial class LoginViewModel : BaseViewModel
             return;
         }
 
+        // Validamos que el email tiene un formato correcto antes de llamar a la API
+        if (!EsEmailValido(Email))
+        {
+            MostrarError("El correo electrónico no tiene un formato válido.");
+            return;
+        }
+
         await EjecutarSeguro(async () =>
         {
             LoginDto dto = new LoginDto { Email = Email, Password = Password };

@@ -49,6 +49,13 @@ public partial class RegistroViewModel : BaseViewModel
             return;
         }
 
+        // Validamos que el email tiene un formato correcto antes de llamar a la API
+        if (!EsEmailValido(Email))
+        {
+            MostrarError("El correo electrónico no tiene un formato válido.");
+            return;
+        }
+
         if (Password != ConfirmarPassword)
         {
             MostrarError("Las contraseñas no coinciden.");

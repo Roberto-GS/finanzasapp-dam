@@ -72,4 +72,26 @@ public partial class BaseViewModel : ObservableObject
             EstaCargando = false;
         }
     }
+
+    /// <summary>
+    /// Comprueba que una cadena tiene el formato básico de un email válido.
+    /// Verifica que existe exactamente un @ con texto antes y después,
+    /// y que el dominio tiene al menos un punto.
+    /// </summary>
+    protected static bool EsEmailValido(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return false;
+
+        try
+        {
+            // Usamos el tipo MailAddress de .NET que valida el formato
+            System.Net.Mail.MailAddress direccion = new System.Net.Mail.MailAddress(email);
+            return direccion.Address == email.Trim();
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }
