@@ -1,6 +1,6 @@
 FINANZASAPP
 
-Ver documentación técnica: [Documentación PDF](docs/Documentación Finanzas App.pdf)
+Ver documentación técnica: [Documentación PDF ](docs/Documentación Finanzas App.pdf)
 
 FinanzasApp es una aplicación de gestión de finanzas personales que nace con la idea de ofrecer a cualquier persona una herramienta sencilla pero completa para tener un control real de su dinero. La mayoría de personas no lleva un seguimiento ordenado de en qué gasta o cuánto ingresa cada mes, lo que dificulta tomar buenas decisiones económicas o cumplir objetivos de ahorro. FinanzasApp pretende resolver eso de forma accesible, sin necesidad de conocimientos de contabilidad ni de economía 
 La aplicación permite registrar cada ingreso y gasto, organizarlos por categorías personalizadas, visualizar la distribución del gasto mediante gráficas, establecer objetivos financieros con seguimiento automático en tiempo real, y colaborar con otras personas a través de grupos compartidos que muestran un resumen financiero conjunto y un ranking de gastos entre los miembros
