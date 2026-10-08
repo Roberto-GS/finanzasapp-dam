@@ -8,8 +8,8 @@ Técnicamente, la aplicación está formada por dos partes bien diferenciadas. P
 La decisión de separar el backend en una API independiente no es solo técnica, sino también práctica: permite que la aplicación funcione desde cualquier dispositivo con conexión a internet, ya que los datos están siempre sincronizados en la nube. La API se despliega de forma independiente en Railway mediante Docker, y la base de datos MySQL está alojada en Aiven, un servicio gestionado en la nube que garantiza disponibilidad, copias de seguridad automáticas y conexiones cifradas mediante SSL 
 La arquitectura del proyecto está organizada en cuatro capas bien separadas (Core, Infrastructure, API y UI), siguiendo principios de diseño que hacen el sistema mantenible, escalable y fácil de extender en el futuro sin necesidad de reescribir partes ya funcionales.
 
-<img width="500" height="300" alt="{F20C8B69-294C-4F06-BDD9-DAB273732708}" src="https://github.com/user-attachments/assets/69880e24-3061-4ca8-88e0-ad8afbc3d333" />
-<img width="500" height="300" alt="{FC1A120E-F9FE-4B1A-998B-1A6315044817}" src="https://github.com/user-attachments/assets/d8dc326c-cbbf-4c54-908a-100ddaa6e652" />
+<img width="500" height="400" alt="{F20C8B69-294C-4F06-BDD9-DAB273732708}" src="https://github.com/user-attachments/assets/69880e24-3061-4ca8-88e0-ad8afbc3d333" />
+<img width="500" height="400" alt="{FC1A120E-F9FE-4B1A-998B-1A6315044817}" src="https://github.com/user-attachments/assets/d8dc326c-cbbf-4c54-908a-100ddaa6e652" />
 
 
 ARQUITECTURA
